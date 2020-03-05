@@ -12,9 +12,9 @@ const db = new Pool({
 // Test run for what it returns when you run a query 
 // try it out in terminal to check out what it returns in queries 
 //dont use 
-db.query("SELECT * from customer", (err,result)=>{
+db.query("SELECT * FROM test", (err,result)=>{
     if (err) {
         return console.error('Error executing query', err.stack)
       }
-    console.log(result.rows) 
+    console.log(result) 
 });
