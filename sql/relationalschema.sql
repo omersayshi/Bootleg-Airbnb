@@ -7,6 +7,7 @@ CREATE TABLE Branch(
 	CHECK(phone_no BETWEEN 1 and 15)
 )
 
+
 /* Change id TYPE */
 CREATE TABLE Employee(
 	employee_id INTEGER,
