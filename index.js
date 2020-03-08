@@ -35,6 +35,29 @@ app.post('/signin', (req,res)=>{
     console.log(Object.keys(user)[0] == 'guest_id')
 });
 
+//laura doing funky shit here i hope it doesnt mess everything up
+$('#userTypeList').change(function() {
+    if(this.value == "Host") {
+        $('#host_id').show();
+        $('#branch_id').show();
+        $('#employee_id').hide();
+        $('#manager_id').hide();
+        $('#guest_id').hide();
+    } else if(this.value == "Employee") {
+        $('#host_id').hide();
+        $('#branch_id').show();
+        $('#employee_id').show();
+        $('#manager_id').show();
+        $('#guest_id').hide();
+    } else{
+    	$('#host_id').hide();
+        $('#branch_id').hide();
+        $('#employee_id').hide();
+        $('#manager_id').hide();
+        $('#guest_id').show();
+    }
+});
+
 // app.get('/whatever', (req,res)=>{
 
 // });
