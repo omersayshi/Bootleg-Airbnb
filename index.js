@@ -24,7 +24,7 @@ app.post('/signin', (req,res)=>{
     const user = req.body;
     const who = Object.keys(user)[0]
     if(who == 'guest_id'){
-        
+        console.log("Its a guest");
     }else if(who == 'host_id'){
         
     }else if(who == 'employee_id'){
