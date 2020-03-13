@@ -26,34 +26,33 @@ app.use(express.static(path.join(__dirname,'public')));
 app.post('/signin', (req,res)=>{
     const user = req.body;
     const who = Object.keys(user)[0]
-    if(who == 'guest_id'){
-        const query = "INSERT INTO guest(guest_id,password,first_name,last_name,email,address,phone_no) VALUES ($1,$2,$3,$4,$5,$6,$7)";
-        const text = [user.guest_id, user.password, user.first_name, user.last_name, user.email, user.address, user.phone_no];
-        db.query(query,text, (err,result)=>{
-            if (err){
-                return console.error('Error executing query', err.stack);
-            }
-        })
-    }else if(who == 'host_id'){
-        const query = "INSERT INTO host(host_id ,branch_id ,password ,first_name ,last_name ,email ,phone_no) VALUES ($1,$2,$3,$4,$5,$6,$7)";
-        const text = [user.guest_id ,user.branch_id ,user.password, user.first_name, user.last_name, user.email, user.phone_no];
-        db.query(query,text, (err,result)=>{
-            if (err){
-                return console.error('Error executing query', err.stack);
-            }
-        })
-    }else if(who == 'employee_id'){
-        const query = "INSERT INTO guest(guest_id,password,first_name,last_name,email,address,phone_no) VALUES ($1,$2,$3,$4,$5,$6,$7)";
-        const text = [user.guest_id, user.password, user.first_name, user.last_name, user.email, user.address, user.phone_no];
-        db.query(query,text, (err,result)=>{
-            if (err){
-                return console.error('Error executing query', err.stack);
-            }
-        })
-    }else{
-        console.log("Who are you? You are not employee, guest or host loool")
-    }
-    console.log(Object.keys(user)[0] == 'guest_id')
+    // if(who == 'guest_id'){
+    //     const query = "INSERT INTO guest(guest_id,password,first_name,last_name,email,address,phone_no) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+    //     const text = [user.guest_id, user.password, user.first_name, user.last_name, user.email, user.address, user.phone_no];
+    //     db.query(query,text, (err,result)=>{
+    //         if (err){
+    //             return console.error('Error executing query', err.stack);
+    //         }
+    //     })
+    // }else if(who == 'host_id'){
+    //     const query = "INSERT INTO host(host_id ,branch_id ,password ,first_name ,last_name ,email ,phone_no) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+    //     const text = [user.guest_id ,user.branch_id ,user.password, user.first_name, user.last_name, user.email, user.phone_no];
+    //     db.query(query,text, (err,result)=>{
+    //         if (err){
+    //             return console.error('Error executing query', err.stack);
+    //         }
+    //     })
+    // }else if(who == 'employee_id'){
+    //     const query = "INSERT INTO guest(guest_id,password,first_name,last_name,email,address,phone_no) VALUES ($1,$2,$3,$4,$5,$6,$7)";
+    //     const text = [user.guest_id, user.password, user.first_name, user.last_name, user.email, user.address, user.phone_no];
+    //     db.query(query,text, (err,result)=>{
+    //         if (err){
+    //             return console.error('Error executing query', err.stack);
+    //         }
+    //     })
+    // }else{
+    //     console.log("Who are you? You are not employee, guest or host loool")
+    // }
     console.log(user);
     console.log(user.name);
 });
