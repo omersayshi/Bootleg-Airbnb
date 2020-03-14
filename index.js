@@ -1,17 +1,7 @@
 const path = require('path');
 express = require('express');
 app = express();
-router = express.Router();
-
-//Database
-const {Pool} = require('pg');
-const db = new Pool({
-    user: 'oabub037',
-    host: 'web0.eecs.uottawa.ca',
-    database: 'oabub037',
-    password: 'Ibra1234@@',
-    port: 15432,
-});
+const db = require('./database');
 
 //Now equivalent of body parser
 //app.use(cors());
@@ -23,7 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname,'public')));
 
-app.post('/', (req,res)=>{
+app.post('/signup', (req,res)=>{
     const user = req.body;
     const who = Object.values(user)[0]
     if(who == 'Guest'){
@@ -53,19 +43,14 @@ app.post('/', (req,res)=>{
     }else{
         console.log("Who are you? You are not employee, guest or host loool")
     }
-    console.log(user);
-    console.log(who);
-
-
+    
+    
+    res.redirect('/signin');
 });
 
-app.get('/', (req,res)=>{
-    res.send("a7a");
-});
-
-// app.post('/whatever', (req,res)=>{
-//     res.send("a7a");
-// });
+app.get('/signin', (req,res)=>{
+    res.sendFile(path.join(__dirname,'/public/signin.html'));
+})
 
 const PORT = process.env.port || 3000;
 
