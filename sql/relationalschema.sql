@@ -13,6 +13,7 @@ CREATE TABLE Employee(
 	employee_id INTEGER,
 	branch_id INTEGER,
 	manager_id INTEGER,
+	password VARCHAR,
 	first_name VARCHAR(20) not null,
 	last_name VARCHAR(20) not null,
 	email VARCHAR(30) not null,	
@@ -26,6 +27,7 @@ CREATE TABLE Employee(
 CREATE TABLE Host(
 	host_id VARCHAR(10) not null,
 	branch_id INTEGER not null,
+	password VARCHAR,
 	first_name VARCHAR(20) not null,
 	last_name VARCHAR(20) not null,
 	email VARCHAR(30) not null,	
@@ -39,6 +41,7 @@ CREATE TABLE Guest(
 	guest_id VARCHAR(10) not null,
 	first_name VARCHAR(20) not null,
 	last_name VARCHAR(20) not null,
+	password VARCHAR,
 	email VARCHAR(30) not null,
 	address VARCHAR(20) not null,
 	phone_no INTEGER,
