@@ -51,6 +51,10 @@ app.post('/signup', (req,res)=>{
     res.sendFile(path.join(__dirname,'/public/signin.html'));
 });
 
+app.post('/test', (req,res)=>{
+    console.log(req.body);
+});
+
 app.post('/signin', (req,ress)=>{
     const user = req.body;
     const who = Object.values(user)[0]
@@ -107,10 +111,15 @@ app.post('/signin', (req,ress)=>{
     }
 });
 
-
+//user api endpoints
 app.get('/user', (req,res)=>{
     res.render('pages/user', {userfirstname: cookie.firstname});
 });
+app.get('/user/properties', (req,res)=>{
+    res.render('pages/userpropertiess', {userfirstname: cookie.firstname});
+});
+
+
 
 
 
