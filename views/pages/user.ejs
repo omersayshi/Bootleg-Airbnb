@@ -18,7 +18,22 @@
   crossorigin="anonymo us"
   />
 
-  <link href="sticky-footer.css" rel="stylesheet">
+  <!-- Honestly gave up on express middleware so Ill just add stylesheet here -->
+  <style>
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      margin-bottom: 60px; /* Margin bottom by footer height */
+    }
+    .py-5{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60px; /* Set the fixed height of the footer here */
+    }
+    </style>
 
 
 </head>

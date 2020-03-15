@@ -111,12 +111,14 @@ app.post('/signin', (req,ress)=>{
     }
 });
 
+
+
 //user api endpoints
 app.get('/user', (req,res)=>{
     res.render('pages/user', {userfirstname: cookie.firstname});
 });
 app.get('/user/properties', (req,res)=>{
-    res.render('pages/userpropertiess', {userfirstname: cookie.firstname});
+    res.render('pages/userproperties', {userfirstname: cookie.firstname});
 });
 
 
