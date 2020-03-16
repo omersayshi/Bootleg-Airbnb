@@ -117,10 +117,31 @@ app.post('/signin', (req,ress)=>{
 app.get('/user', (req,res)=>{
     res.render('pages/user', {userfirstname: cookie.firstname});
 });
-app.get('/user/properties', (req,res)=>{
-    res.render('pages/userproperties', {userfirstname: cookie.firstname});
-});
 
+//properties page
+app.get('/user/properties', (req,res)=>{
+    db.query('SELECT property_id,property_name FROM property', (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        res.render('pages/userproperties1', {properties: result.rows, info:{}});
+    });
+});
+app.get('/user/properties/:id', (req,res)=>{
+    db.query('SELECT property_id,property_name FROM property', (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+
+        db.query('SELECT * FROM property NATURAL JOIN host WHERE property_id=$1',[req.params.id], (err,rez)=>{
+            if (err){
+                return console.error('Error executing query', err.stack);
+            }
+            console.log(rez.rows[0]);
+            res.render('pages/userproperties2', {properties: result.rows, info : rez.rows[0]});
+        });
+    });
+});
 
 
 
