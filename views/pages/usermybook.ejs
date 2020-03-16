@@ -108,13 +108,16 @@
             <p class="card-text">Max Occupancy: <%=info.max_occupany%></p>
             <p class="card-text">Number of room: <%=info.num_rooms%>. and Numbers of bathrooms: <%=info.num_bathrooms%>.</p>
             <p class="card-text">Booking Start Date: <%=info.start_date%></p>
-            <p class="card-text">Booking End Date: <%=info.end_date%></p> 
+            <p class="card-text">Booking End Date: <%=info.end_date%></p>
+            <p class="card-text">Your rating: <%=info.rating%></p>
+            <p class="card-text">Your comment: <%=info.comment%></p>
+          
             <a href="#" class="btn btn-danger">Cancel Booking</a>
             <p></p>
             <p></p>
             <p></p>
             <p>Leave a review. (If you haven't already)</p>
-            <form accept-charset="UTF-8" action="/test" method="post">
+            <form accept-charset="UTF-8" action="/user/review/<%=booking.booking_id%>" method="post">
                 <label for="sel1">Rating (out of 5)</label>
                 <select class="form-group" name="rating">
                     <option>1</option>
@@ -127,7 +130,7 @@
               
               <div class="text-right">
                   <p></p>
-                  <button class="btn btn-success" type="submit">Leave a Review</button>
+                  <button class="btn btn-success" type="submit" >Leave a Review</button>
               </div>
           </form>
 

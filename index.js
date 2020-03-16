@@ -9,6 +9,10 @@ const Cookie = require('./bootlegcookie');
 
 const cookie = new Cookie();
 
+//REMOVE THIS WHEN YOU ARE DONE.
+cookie.set('omer','guest');
+cookie.setfirstname('Omer');
+
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname,'./views'))
 
@@ -155,14 +159,39 @@ app.get('/user/mybookings', (req,res)=>{
 });
 
 app.get('/user/mybookings/:id', (req,res)=>{
+    const q = "SELECT * FROM (SELECT * FROM rentalagreement WHERE booking_id = $1) A LEFT OUTER JOIN (SELECT * FROM property) B ON A.property_id = B.property_id FULL OUTER JOIN (SELECT * FROM review) C ON A.booking_id = C.boooking_id";
     db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE guest_id = $1',[cookie.username], (err,result)=>{
         if (err) return console.error('Error executing query', err.stack);
-        db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE booking_id = $1',[req.params.id], (err,rez)=>{
+        db.query(q,[req.params.id], (err,rez)=>{
             if (err) return console.error('Error executing query', err.stack);
             if (cookie.username != rez.rows[0].guest_id) res.send('Oooops you were not supposed to reach here buddy.');
             res.render('pages/usermybook', {bookings: result.rows, info:rez.rows[0]});
+            
         })
     })
+});
+
+
+app.post('/user/review/:id', (req,res)=>{
+    db.query('SELECT * FROM review NATURAL JOIN rentalagreement WHERE booking_id = $1 ',[req.params.id], (err,result)=>{
+        if (err) return console.error('Error executing query', err.stack);
+        if (result.rows.length != 0) {
+            res.send('You already left a review.')
+        }
+        else{
+            const query = 'INSERT INTO review(boooking_id,rating,comment) VALUES ($1,$2,$3)';
+            const values = [req.params.id,req.body.rating,req.body.comment];
+            db.query(query,values, (err,result)=>{
+            if (err) return console.error('Error executing query', err.stack);
+            res.redirect(`/user/mybookings/${req.params.id}`);
+            });
+        }
+    });
+    
+});
+
+app.post('/test', (req,res)=>{
+    console.log(req.body);
 });
 
 
