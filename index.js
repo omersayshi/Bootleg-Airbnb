@@ -144,10 +144,15 @@ app.get('/user/properties/:id', (req,res)=>{
 });
 
 
+app.get('/user/mybookings', (req,res)=>{
+    db.query('SELECT * FROM ')
+
+});
+
 
 
 const PORT = process.env.port || 3000;
 
 app.listen(PORT, ()=>{
-    console.log(`listening at locçalhost:${PORT}`);
+    console.log(`listening at localhost:${PORT}`);
 });
