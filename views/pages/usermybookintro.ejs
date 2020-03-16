@@ -73,10 +73,10 @@
     <div class="row">
 
       <div class="col-lg-3">
-        <h4 class="my-4">Select property:</h4>
+        <h4 class="my-4"><%=message%></h4>
         <div class="list-group">
-          <% for(var property of properties) { %>
-            <a href="/user/properties/<%=property.property_id%>" class="list-group-item"><%=property.property_name%></a>
+          <% for(var booking of bookings) { %>
+            <a href="/user/mybookings/<%=booking.booking_id%>" class="list-group-item"><%=booking.property_name%> <%=booking.start_date%></a>
             <% } %>  
         </div>
       </div>

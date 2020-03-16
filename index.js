@@ -111,7 +111,9 @@ app.post('/signin', (req,ress)=>{
     }
 });
 
-
+app.get('/signin', (req,res)=>{
+    res.sendFile( path.join(__dirname,'public/signin.html')  );
+})
 
 //user api endpoints
 app.get('/user', (req,res)=>{
@@ -124,7 +126,7 @@ app.get('/user/properties', (req,res)=>{
         if (err){
             return console.error('Error executing query', err.stack);
         }
-        res.render('pages/userproperties1', {properties: result.rows, info:{}});
+        res.render('pages/userpropintro', {properties: result.rows, message: "Select Property:"});
     });
 });
 app.get('/user/properties/:id', (req,res)=>{
@@ -143,10 +145,24 @@ app.get('/user/properties/:id', (req,res)=>{
     });
 });
 
-
+//my bookings page
 app.get('/user/mybookings', (req,res)=>{
-    db.query('SELECT * FROM ')
+    db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE guest_id = $1',[cookie.username], (err,result)=>{
+        if (err) return console.error('Error executing query', err.stack);
+        console.log(result.rows)
+        res.render('pages/usermybookintro', {bookings: result.rows, message:"Select booking:"});
+    })
+});
 
+app.get('/user/mybookings/:id', (req,res)=>{
+    db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE guest_id = $1',[cookie.username], (err,result)=>{
+        if (err) return console.error('Error executing query', err.stack);
+        db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE booking_id = $1',[req.params.id], (err,rez)=>{
+            if (err) return console.error('Error executing query', err.stack);
+            if (cookie.username != rez.rows[0].guest_id) res.send('Oooops you were not supposed to reach here buddy.');
+            res.render('pages/usermybook', {bookings: result.rows, info:rez.rows[0]});
+        })
+    })
 });
 
 
