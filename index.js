@@ -222,7 +222,7 @@ app.post('/user/book/:id', (req,res)=>{
     db.query("SELECT * FROM rentalagreement WHERE property_id = $1 and guest_id = $2 and start_date=$3 and end_date=$4", [req.params.id, cookie.username, req.body.start_date, req.body.end_date], (err,aaa)=>{
 
         if(aaa.rowCount == 0){
-            db.query("SELECT * FROM payment", (err,result)=>{
+            db.query("SELECT * FROM payment ORDER BY payment_id", (err,result)=>{
                 if (err) {
                     return console.error('Error executing query', err.stack)
                 }
