@@ -9,9 +9,6 @@ const Cookie = require('./bootlegcookie');
 
 const cookie = new Cookie();
 
-//REMOVE THIS WHEN YOU ARE DONE.
-cookie.set('omer','guest');
-cookie.setfirstname('Omer');
 
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname,'./views'))
@@ -143,8 +140,9 @@ app.get('/user/properties/:id', (req,res)=>{
             if (err){
                 return console.error('Error executing query', err.stack);
             }
-            console.log(rez.rows[0]);
-            res.render('pages/userproperties2', {properties: result.rows, info : rez.rows[0]});
+            db.query('SELECT * FROM rentalagreement INNER JOIN review ON rentalagreement.booking_id = review.boooking_id WHERE property_id = $1',[req.params.id], (err,reZz)=>{
+                res.render('pages/userproperties2', {properties: result.rows, info : rez.rows[0], review : reZz.rows, rec: reZz.rowCount });
+            });
         });
     });
 });
@@ -159,21 +157,22 @@ app.get('/user/mybookings', (req,res)=>{
 });
 
 app.get('/user/mybookings/:id', (req,res)=>{
-    const q = "SELECT * FROM (SELECT * FROM rentalagreement WHERE booking_id = $1) A LEFT OUTER JOIN (SELECT * FROM property) B ON A.property_id = B.property_id FULL OUTER JOIN (SELECT * FROM review) C ON A.booking_id = C.boooking_id";
+    const q = "SELECT * FROM (SELECT * FROM rentalagreement WHERE booking_id = $1) A LEFT OUTER JOIN (SELECT * FROM property) B ON A.property_id = B.property_id LEFT OUTER JOIN (SELECT * FROM review) C ON A.booking_id = C.boooking_id";
     db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE guest_id = $1',[cookie.username], (err,result)=>{
         if (err) return console.error('Error executing query', err.stack);
         db.query(q,[req.params.id], (err,rez)=>{
             if (err) return console.error('Error executing query', err.stack);
+            console.log(rez.rows)
             if (cookie.username != rez.rows[0].guest_id) res.send('Oooops you were not supposed to reach here buddy.');
             res.render('pages/usermybook', {bookings: result.rows, info:rez.rows[0]});
-            
         })
     })
 });
 
+//my bookings page huuuuuuuuuuuh
 
 app.post('/user/review/:id', (req,res)=>{
-    db.query('SELECT * FROM review NATURAL JOIN rentalagreement WHERE booking_id = $1 ',[req.params.id], (err,result)=>{
+    db.query('SELECT * FROM rentalagreement INNER JOIN review ON rentalagreement.booking_id = review.boooking_id WHERE booking_id = $1',[req.params.id], (err,result)=>{
         if (err) return console.error('Error executing query', err.stack);
         if (result.rows.length != 0) {
             res.send('You already left a review.')
@@ -189,6 +188,68 @@ app.post('/user/review/:id', (req,res)=>{
     });
     
 });
+
+
+//boooook now
+app.get('/user/booknow', (req,res)=>{
+    db.query('SELECT property_id,property_name FROM property', (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        res.render('pages/userbooknow', {properties: result.rows, rec: 0});
+    });
+});
+
+app.get('/user/booknow/:id', (req,res)=>{
+    db.query('SELECT property_id,property_name FROM property', (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        db.query('SELECT property_id,property_name FROM property where property_id=$1',[req.params.id], (err,rez)=>{
+            if (err){
+                return console.error('Error executing query', err.stack);
+            }
+            res.render('pages/userbooknow', {properties: result.rows, load:rez.rows, rec: 1});
+        });
+    });
+});
+
+app.post('/user/book/:id', (req,res)=>{
+    console.log(req.params.id);
+    console.log(req.body);
+
+    flag = false;
+    db.query("SELECT * FROM rentalagreement WHERE property_id = $1 and guest_id = $2 and start_date=$3 and end_date=$4", [req.params.id, cookie.username, req.body.start_date, req.body.end_date], (err,aaa)=>{
+
+        if(aaa.rowCount == 0){
+            db.query("SELECT * FROM payment", (err,result)=>{
+                if (err) {
+                    return console.error('Error executing query', err.stack)
+                }
+                const payment_id = result.rows[result.rowCount-1].payment_id + 1;
+                db.query("INSERT INTO payment(payment_method,card_number) VALUES ($1,$2)",[req.body.Acc,parseInt(req.body.card_number)], (err,rez)=>{
+                  if (err) {
+                    return console.error('Error executing query', err.stack)
+                  }
+                  db.query("INSERT INTO rentalagreement(property_id,guest_id,payment_id,start_date,end_date) VALUES ($1,$2,$3,$4,$5)",[req.params.id, cookie.username, payment_id, req.body.start_date, req.body.end_date], (err,rezz)=>{
+                    if (err) {
+                      return console.error('Error executing query', err.stack)
+                    }
+                  });
+                });
+            });
+        }else{
+            console.log('ALREADY!!');
+        }
+    });
+});
+
+
+
+
+
+
+
 
 app.post('/test', (req,res)=>{
     console.log(req.body);

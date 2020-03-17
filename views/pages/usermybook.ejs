@@ -116,8 +116,9 @@
             <p></p>
             <p></p>
             <p></p>
-            <p>Leave a review. (If you haven't already)</p>
-            <form accept-charset="UTF-8" action="/user/review/<%=booking.booking_id%>" method="post">
+            <p>Leave a review. (If you haven't already).</p>
+
+            <form accept-charset="UTF-8" action="/user/review/<%=info.booking_id%>" method="post">
                 <label for="sel1">Rating (out of 5)</label>
                 <select class="form-group" name="rating">
                     <option>1</option>

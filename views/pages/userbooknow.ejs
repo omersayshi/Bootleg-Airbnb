@@ -76,8 +76,8 @@
         <h4 class="my-4">Select property:</h4>
         <div class="list-group">
           <% for(var property of properties) { %>
-            <a href="/user/properties/<%=property.property_id%>" class="list-group-item"><%=property.property_name%></a>
-          <% } %>  
+            <a href="/user/booknow/<%=property.property_id%>" class="list-group-item"><%=property.property_name%></a>
+            <% } %>  
         </div>
       </div>
       <!-- /.col-lg-3 -->
@@ -86,34 +86,59 @@
 
         <div class="card mt-4">
           <div class="card-body">
-            <h3 class="card-title"><%=info.property_name%></h3>
-            <h4> $<%=info.price%> </h4>
-            <p class="card-text">Address: <%=info.address%></p>
-            <p class="card-text">City: <%=info.city%></p>
-            <p class="card-text">Property type: <%=info.property_type%></p>
-            <p class="card-text">Room type: <%=info.room_type%></p>
-            <p class="card-text">Max Occupancy: <%=info.max_occupany%></p>
-            <p class="card-text">Number of room: <%=info.num_rooms%>. and Numbers of bathrooms: <%=info.num_bathrooms%>.</p>
-            <p class="card-text">Property Owner: <%=info.first_name%> <%=info.last_name%></p>  
+            <%if (rec != 0) { %>
+            <h3 class="card-title">Property: <%=load[0].property_name%></h3>
+            <!-- <p class="card-text">Address:/p> -->
+                
+                <form action="/user/book/<%=load[0].property_id%>" method="POST">
+                    <div class="form-group">
+                        <label for="First Name">Start date (YYYY-MM-DD)</label>
+                        <input class="form-control" name="start_date" style="width: 20ch" maxlength="20">
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="Last Name">End date (YYYY-MM-DD)</label>
+                        <input class="form-control" name="end_date" style="width: 20ch" maxlength="20">
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="sel1">Select Payment Type:</label>
+                        <select class="form-group" name="Acc">
+                            <option>visa</option>
+                            <option>mastercard</option>
+                            <option>interac</option>
+                        </select>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="Email">Card number</label>
+                        <input class="form-control" name="card_number" style="width: 50ch" maxlength="30">
+                    </div>
+                    <!--Other fields-->
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+                <% } %>
           </div>
         </div>
         <!-- /.card -->
-        <%if (rec != 0) { %>
-        <div class="card card-outline-secondary my-4">
+
+        <!-- <div class="card card-outline-secondary my-4">
           <div class="card-header">
-            Reviews
+            Product Reviews
           </div>
           <div class="card-body">
-            <% for(var rev of review) { %>
-            <p><%=rev.comment%></p>
-            <small class="text-muted">Posted by <%=rev.guest_id%></small>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+            <small class="text-muted">Posted by Anonymous on 3/1/17</small>
             <hr>
-            <% } %> 
-            
-
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+            <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+            <hr>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+            <small class="text-muted">Posted by Anonymous on 3/1/17</small>
+            <hr>
+            <a href="#" class="btn btn-success">Leave a Review</a>
           </div>
-        </div>
-        <% } %>
+        </div> -->
         <!-- /.card -->
 
       </div>
