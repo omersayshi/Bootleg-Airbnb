@@ -118,7 +118,7 @@ app.get('/signin', (req,res)=>{
 
 //user api endpoints
 app.get('/user', (req,res)=>{
-    res.render('pages/user', {userfirstname: cookie.firstname});
+    res.render('pages/user/user', {userfirstname: cookie.firstname});
 });
 
 //properties page
@@ -127,7 +127,7 @@ app.get('/user/properties', (req,res)=>{
         if (err){
             return console.error('Error executing query', err.stack);
         }
-        res.render('pages/userpropintro', {properties: result.rows, message: "Select Property:"});
+        res.render('pages/user/userpropintro', {properties: result.rows, message: "Select Property:"});
     });
 });
 app.get('/user/properties/:id', (req,res)=>{
@@ -141,7 +141,7 @@ app.get('/user/properties/:id', (req,res)=>{
                 return console.error('Error executing query', err.stack);
             }
             db.query('SELECT * FROM rentalagreement INNER JOIN review ON rentalagreement.booking_id = review.boooking_id WHERE property_id = $1',[req.params.id], (err,reZz)=>{
-                res.render('pages/userproperties2', {properties: result.rows, info : rez.rows[0], review : reZz.rows, rec: reZz.rowCount });
+                res.render('pages/user/userproperties2', {properties: result.rows, info : rez.rows[0], review : reZz.rows, rec: reZz.rowCount });
             });
         });
     });
@@ -152,7 +152,7 @@ app.get('/user/mybookings', (req,res)=>{
     db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE guest_id = $1',[cookie.username], (err,result)=>{
         if (err) return console.error('Error executing query', err.stack);
         console.log(result.rows)
-        res.render('pages/usermybookintro', {bookings: result.rows, message:"Select booking:"});
+        res.render('pages/user/usermybookintro', {bookings: result.rows, message:"Select booking:"});
     })
 });
 
@@ -164,7 +164,7 @@ app.get('/user/mybookings/:id', (req,res)=>{
             if (err) return console.error('Error executing query', err.stack);
             console.log(rez.rows)
             if (cookie.username != rez.rows[0].guest_id) res.send('Oooops you were not supposed to reach here buddy.');
-            res.render('pages/usermybook', {bookings: result.rows, info:rez.rows[0]});
+            res.render('pages/user/usermybook', {bookings: result.rows, info:rez.rows[0]});
         })
     })
 });
@@ -196,7 +196,7 @@ app.get('/user/booknow', (req,res)=>{
         if (err){
             return console.error('Error executing query', err.stack);
         }
-        res.render('pages/userbooknow', {properties: result.rows, rec: 0});
+        res.render('pages/user/userbooknow', {properties: result.rows, rec: 0});
     });
 });
 
@@ -209,7 +209,7 @@ app.get('/user/booknow/:id', (req,res)=>{
             if (err){
                 return console.error('Error executing query', err.stack);
             }
-            res.render('pages/userbooknow', {properties: result.rows, load:rez.rows, rec: 1});
+            res.render('pages/user/userbooknow', {properties: result.rows, load:rez.rows, rec: 1});
         });
     });
 });
