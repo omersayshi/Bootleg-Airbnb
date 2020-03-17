@@ -235,6 +235,8 @@ app.post('/user/book/:id', (req,res)=>{
                     if (err) {
                       return console.error('Error executing query', err.stack)
                     }
+
+                    res.redirect('/user/mybookings');
                   });
                 });
             });
@@ -245,7 +247,10 @@ app.post('/user/book/:id', (req,res)=>{
 });
 
 
-
+app.get('/signout', (req,res)=>{
+    cookie.clearconstructor();
+    res.redirect('/signin');
+});
 
 
 

@@ -16,6 +16,8 @@ class bootlegcookie{
     
     clearconstructor(){
         this.username = '';
+        this.type = '';
+        this.firstname = '';
     }
 }
 
