@@ -49,18 +49,18 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/user">Home
+            <a class="nav-link" href="/host">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user/mybookings">My Bookings</a>
+            <a class="nav-link" href="/host/mybookings">Property Rental agreements</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user/booknow">Book now!</a>
+            <a class="nav-link" href="/host/booknow">Add a property!</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/user/properties">Properties</a>
+            <a class="nav-link" href="/host/reviews">Reviews</a>
           </li>
         </ul>
       </div>
@@ -76,47 +76,11 @@
         <h4 class="my-4">Select property:</h4>
         <div class="list-group">
           <% for(var property of properties) { %>
-            <a href="/user/properties/<%=property.property_id%>" class="list-group-item"><%=property.property_name%></a>
-          <% } %>  
+            <a href="/host/reviews/<%=property.property_id%>" class="list-group-item"><%=property.property_name%></a>
+            <% } %>  
         </div>
       </div>
-      <!-- /.col-lg-3 -->
-
-      <div class="col-lg-9">
-
-        <div class="card mt-4">
-          <div class="card-body">
-            <h3 class="card-title"><%=info.property_name%></h3>
-            <h4> $<%=info.price%> </h4>
-            <p class="card-text">Address: <%=info.address%></p>
-            <p class="card-text">City: <%=info.city%></p>
-            <p class="card-text">Property type: <%=info.property_type%></p>
-            <p class="card-text">Room type: <%=info.room_type%></p>
-            <p class="card-text">Max Occupancy: <%=info.max_occupany%></p>
-            <p class="card-text">Number of room: <%=info.num_rooms%>. and Numbers of bathrooms: <%=info.num_bathrooms%>.</p>
-            <p class="card-text">Property Owner: <%=info.first_name%> <%=info.last_name%></p>  
-          </div>
-        </div>
-        <!-- /.card -->
-        <%if (rec != 0) { %>
-        <div class="card card-outline-secondary my-4">
-          <div class="card-header">
-            Reviews
-          </div>
-          <div class="card-body">
-            <% for(var rev of review) { %>
-            <p><%=rev.comment%></p>
-            <p><%=rev.rating%>/5</p>
-            <small class="text-muted">Posted by <%=rev.guest_id%></small>
-            <hr>
-            <% } %> 
-            
-
-          </div>
-        </div>
-        <% } %>
-        <!-- /.card -->
-
+    
       </div>
       <!-- /.col-lg-9 -->
 

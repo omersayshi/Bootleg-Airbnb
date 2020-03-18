@@ -67,6 +67,10 @@ CREATE TABLE Property(
 	
 )
 
+INSERT INTO property(host_id,address,city,property_type,room_type,max_occupany,num_rooms,num_bathrooms,property_name,price) 
+VALUES 
+('saada','260 World Ave','Ottawa','semi detached house','private rooms',4,2,2,'Semi-Detached beautiful crib', 150)
+
 CREATE TABLE Payment(
 	payment_id INTEGER not null,
 	payment_method VARCHAR(10) not null,

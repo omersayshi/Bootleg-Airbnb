@@ -8,6 +8,9 @@ const Cookie = require('./bootlegcookie');
 //app.use(cors());
 
 const cookie = new Cookie();
+// cookie.set('omer','host');
+// cookie.setfirstname('Omer');
+
 
 
 app.set('view engine', 'ejs');
@@ -73,14 +76,14 @@ app.post('/signin', (req,ress)=>{
             }else{
                 
                 //sets cookie to play with
-                cookie.set(user.username,'guest');
+                cookie.set(user.username,'host');
                 cookie.setfirstname(res.rows[0].first_name);
                 //takes us to the users page
                 ress.redirect('/user');
             }
         })
     }else if(who == 'Host'){
-        const query ='SELECT * FROM host where guest_id = $1 AND password = $2';
+        const query ='SELECT * FROM host where host_id = $1 AND password = $2';
         const text = [user.username,user.password];
         db.query(query, text, (err,res)=>{
             if (err){
@@ -91,22 +94,25 @@ app.post('/signin', (req,ress)=>{
                 ress.status(404).send('Username not found or password is wrong. Signup or check password pls.')
             }else{
                 cookie.set(user.username,'host');
+                cookie.setfirstname(res.rows[0].first_name);
+                //takes us to the users page
+                ress.redirect('/host');
             }
         })
     }else if(who == 'Employee'){
-        const query ='SELECT * FROM employee where guest_id = $1 AND password = $2';
-        const text = [user.username,user.password];
-        db.query(query, text, (err,res)=>{
-            if (err){
-                return console.error('Error executing query', err.stack);
-            }
+        // const query ='SELECT * FROM employee where guest_id = $1 AND password = $2';
+        // const text = [user.username,user.password];
+        // db.query(query, text, (err,res)=>{
+        //     if (err){
+        //         return console.error('Error executing query', err.stack);
+        //     }
     
-            if (res.rowCount == 0){
-                ress.status(404).send('Username not found or password is wrong. Signup or check password pls.')
-            }else{
-                cookie.set(user.username,'employee');
-            }
-        })
+        //     if (res.rowCount == 0){
+        //         ress.status(404).send('Username not found or password is wrong. Signup or check password pls.')
+        //     }else{
+        //         cookie.set(user.username,'employee');
+        //     }
+        // })
     }else{
         console.log("Who are you? You are not employee, guest or host loool")
     }
@@ -246,11 +252,49 @@ app.post('/user/book/:id', (req,res)=>{
     });
 });
 
-
 app.get('/signout', (req,res)=>{
     cookie.clearconstructor();
     res.redirect('/signin');
 });
+
+
+
+
+//HOST
+app.get('/host',(req,res)=>{
+    res.render('pages/host/host', {userfirstname: cookie.firstname});
+});
+
+app.get('/host/reviews',(req,res)=>{
+    db.query('SELECT property_id,property_name FROM property WHERE host_id = $1',[cookie.username], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        res.render('pages/host/userrevintro', {properties: result.rows});
+    });
+});
+
+app.get('/host/reviews/:id',(req,res)=>{
+    db.query('SELECT property_id,property_name FROM property WHERE host_id = $1',[cookie.username], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+
+        db.query('SELECT * FROM property NATURAL JOIN host WHERE property_id=$1',[req.params.id], (err,rez)=>{
+            if (err){
+                return console.error('Error executing query', err.stack);
+            }
+            db.query('SELECT * FROM rentalagreement INNER JOIN review ON rentalagreement.booking_id = review.boooking_id WHERE property_id = $1',[req.params.id], (err,reZz)=>{
+                res.render('pages/host/userreview', {properties: result.rows, info : rez.rows[0], review : reZz.rows, rec: reZz.rowCount });
+            });
+        });
+    });
+});
+
+
+
+
+
 
 
 
