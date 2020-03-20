@@ -1,6 +1,6 @@
 /* Change id TYPE */
 CREATE TABLE Branch(
-	branch_id INTEGER, 
+	branch_id INTEGER,
 	address VARCHAR(20) not null,
 	phone_no INTEGER,
 	PRIMARY KEY (branch_id),
@@ -16,7 +16,7 @@ CREATE TABLE Employee(
 	password VARCHAR,
 	first_name VARCHAR(20) not null,
 	last_name VARCHAR(20) not null,
-	email VARCHAR(30) not null,	
+	email VARCHAR(30) not null,
 	phone_no INTEGER,
 	PRIMARY KEY (employee_id),
 	FOREIGN KEY (branch_id) REFERENCES branch,
@@ -30,7 +30,7 @@ CREATE TABLE Host(
 	password VARCHAR,
 	first_name VARCHAR(20) not null,
 	last_name VARCHAR(20) not null,
-	email VARCHAR(30) not null,	
+	email VARCHAR(30) not null,
 	phone_no INTEGER,
 	PRIMARY KEY (host_id),
 	FOREIGN KEY (branch_id) REFERENCES branch,
@@ -64,15 +64,15 @@ CREATE TABLE Property(
 	/* CHECK THIS WITH PROF PLS*/
 	CHECK(property_type in ('condo', 'bungalow', 'full detached house', 'semi detached house', 'townhouse')),
 	CHECK(room_type in ('private rooms', 'shared rooms'))
-	
+
 )
 
-INSERT INTO property(host_id,address,city,property_type,room_type,max_occupany,num_rooms,num_bathrooms,property_name,price) 
-VALUES 
+INSERT INTO property(host_id,address,city,property_type,room_type,max_occupany,num_rooms,num_bathrooms,property_name,price)
+VALUES
 ('saada','260 World Ave','Ottawa','semi detached house','private rooms',4,2,2,'Semi-Detached beautiful crib', 150)
 
 CREATE TABLE Payment(
-	payment_id INTEGER not null,
+	payment_id SERIAL not null,
 	payment_method VARCHAR(10) not null,
 	card_number INTEGER not null,
 	PRIMARY KEY (payment_id),
@@ -81,7 +81,7 @@ CREATE TABLE Payment(
 
 
 CREATE TABLE RentalAgreement(
-	booking_id INTEGER not null,
+	booking_id SERIAL not null,
 	property_id VARCHAR(20) not null,
 	guest_id VARCHAR(10) not null,
 	payment_id INTEGER not null,
@@ -93,7 +93,10 @@ CREATE TABLE RentalAgreement(
 	CHECK(start_date < end_date)
 )
 
-
-
-
-
+CREATE TABLE Review(
+	review_id SERIAL not null,
+	rating INTEGER not null,
+	comment VARCHAR,
+	PRIMARY KEY(review_id),
+	CHECK (rating in (1,2,3,4,5))
+)
