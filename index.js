@@ -8,8 +8,8 @@ const Cookie = require('./bootlegcookie');
 //app.use(cors());
 
 const cookie = new Cookie();
-// cookie.set('omer','host');
-// cookie.setfirstname('Omer');
+cookie.set('omer','host');
+cookie.setfirstname('Omer');
 
 
 
@@ -162,6 +162,7 @@ app.get('/user/mybookings', (req,res)=>{
     })
 });
 
+//mightve fucked up something over here will check over later
 app.get('/user/mybookings/:id', (req,res)=>{
     const q = "SELECT * FROM (SELECT * FROM rentalagreement WHERE booking_id = $1) A LEFT OUTER JOIN (SELECT * FROM property) B ON A.property_id = B.property_id LEFT OUTER JOIN (SELECT * FROM review) C ON A.booking_id = C.boooking_id";
     db.query('SELECT * FROM rentalagreement NATURAL JOIN property WHERE guest_id = $1',[cookie.username], (err,result)=>{
@@ -291,11 +292,29 @@ app.get('/host/reviews/:id',(req,res)=>{
     });
 });
 
+app.get('/host/mybookings',(req,res)=>{
+    db.query('SELECT property_id,property_name FROM property WHERE host_id = $1',[cookie.username], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        res.render('pages/host/hostmybook', {properties: result.rows});
+    });
+});
 
-
-
-
-
+app.get('/host/mybookings/:id',(req,res)=>{
+    db.query('SELECT property_id,property_name FROM property WHERE host_id = $1',[cookie.username], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        db.query('SELECT * FROM review RIGHT OUTER JOIN rentalagreement ON review.boooking_id = rentalagreement.booking_id WHERE property_id = $1',[req.params.id], (err,rez)=>{
+            if (err){
+                return console.error('Error executing query', err.stack);
+            }
+            res.render('pages/host/hostmybookmain', {properties: result.rows, info:rez.rows, woo: rez.rowCount});
+            console.log(rez.rows);
+        });
+    });
+});
 
 
 
