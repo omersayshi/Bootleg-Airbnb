@@ -76,7 +76,7 @@
         <h4 class="my-4">Select property:</h4>
         <div class="list-group">
           <% for(var property of properties) { %>
-            <a href="/host/reviews/<%=property.property_id%>" class="list-group-item"><%=property.property_name%></a>
+            <a href="/host/mybookings/<%=property.property_id%>" class="list-group-item"><%=property.property_name%></a>
           <% } %>  
         </div>
       </div>
@@ -93,8 +93,7 @@
               <% for(var rev of info) { %>
               <p>Booking id: <%=rev.booking_id%>. Guest id: <%=rev.guest_id%></p>
               <p>Start date: <%=rev.start_date%> and End date: <%=rev.end_date%></p>
-              <p>Review: <%=rev.rating%>/5. Comment: <%=rev.comment%> </p>
-              <!-- <small class="text-muted">Posted by <%=rev.guest_id%></small> -->
+              <p>Review: <%=rev.rating%>/5. Comment: <%=rev.comment%> <a href="/host/cancelbooking/<%=rev.booking_id%>" class="btn btn-outline-danger btn-sm" >Go somewhere</a></p>
               <hr>
               <% } %>
             </div>

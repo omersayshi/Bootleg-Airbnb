@@ -8,8 +8,8 @@ const Cookie = require('./bootlegcookie');
 //app.use(cors());
 
 const cookie = new Cookie();
-cookie.set('omer','host');
-cookie.setfirstname('Omer');
+// cookie.set('omer','host');
+// cookie.setfirstname('Omer');
 
 
 
@@ -170,10 +170,39 @@ app.get('/user/mybookings/:id', (req,res)=>{
         db.query(q,[req.params.id], (err,rez)=>{
             if (err) return console.error('Error executing query', err.stack);
             console.log(rez.rows)
-            if (cookie.username != rez.rows[0].guest_id) res.send('Oooops you were not supposed to reach here buddy.');
             res.render('pages/user/usermybook', {bookings: result.rows, info:rez.rows[0]});
         })
     })
+});
+
+app.get('/user/cancelbook/:id', (req,res)=>{
+    db.query('SELECT booking_id, start_date FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        today = new Date();
+        date = result.rows[0].start_date;
+        console.log(today);
+        console.log(date);
+        console.log(date<today);
+        if(date<today){
+            res.send('You can not cancel a booking that has already passed its start date!')
+        }else{
+            db.query('DELETE FROM review WHERE boooking_id = $1', [req.params.id], (err,ree)=>{
+                if (err){
+                    return console.error('Error executing query', err.stack);
+                }
+            });
+
+            db.query('DELETE FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,ree)=>{
+                if (err){
+                    return console.error('Error executing query', err.stack);
+                }
+            });
+            
+            res.redirect(`/user`);
+        }
+    });
 });
 
 //my bookings page huuuuuuuuuuuh
@@ -313,6 +342,35 @@ app.get('/host/mybookings/:id',(req,res)=>{
             res.render('pages/host/hostmybookmain', {properties: result.rows, info:rez.rows, woo: rez.rowCount});
             console.log(rez.rows);
         });
+    });
+});
+
+app.get('/host/cancelbooking/:id', (req,res)=>{
+    db.query('SELECT booking_id, start_date FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+        today = new Date();
+        date = result.rows[0].start_date;
+        console.log(today);
+        console.log(date);
+        console.log(date<today);
+        if(date<today){
+            res.send('You can not cancel a booking that has already passed its start date!')
+        }else{
+            db.query('DELETE FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,ree)=>{
+                if (err){
+                    return console.error('Error executing query', err.stack);
+                }
+            });
+            db.query('DELETE FROM review WHERE boooking_id = $1', [req.params.id], (err,ree)=>{
+                if (err){
+                    return console.error('Error executing query', err.stack);
+                }
+            });
+
+            res.redirect(`/host/mybookings/${req.params.id}`);
+        }
     });
 });
 
