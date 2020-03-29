@@ -59,6 +59,7 @@ CREATE TABLE Property(
 	max_occupany INTEGER not null,
 	num_rooms INTEGER not null,
 	num_bathrooms INTEGER not null,
+	price INTEGER not null,
 	PRIMARY KEY (property_id),
 	FOREIGN KEY (host_id) REFERENCES host,
 	/* CHECK THIS WITH PROF PLS*/
