@@ -57,7 +57,7 @@
             <a class="nav-link" href="/host/mybookings">Property Rental agreements</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/host/booknow">Add a property!</a>
+            <a class="nav-link" href="/host/addprop">Add a property!</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/host/reviews">Reviews</a>
@@ -93,7 +93,7 @@
               <% for(var rev of info) { %>
               <p>Booking id: <%=rev.booking_id%>. Guest id: <%=rev.guest_id%></p>
               <p>Start date: <%=rev.start_date%> and End date: <%=rev.end_date%></p>
-              <p>Review: <%=rev.rating%>/5. Comment: <%=rev.comment%> <a href="/host/cancelbooking/<%=rev.booking_id%>" class="btn btn-outline-danger btn-sm" >Go somewhere</a></p>
+              <p>Review: <%=rev.rating%>/5. Comment: <%=rev.comment%> <a href="/host/cancelbooking/<%=rev.booking_id%>" class="btn btn-outline-danger btn-sm" >Cancel Booking.</a></p>
               <hr>
               <% } %>
             </div>
