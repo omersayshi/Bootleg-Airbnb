@@ -375,10 +375,27 @@ app.get('/host/cancelbooking/:id', (req,res)=>{
 });
 
 
+app.get('/host/addprop',(req,res)=>{
+    res.render('pages/host/hostaddprop');
+});
 
 
-app.post('/test', (req,res)=>{
-    console.log(req.body);
+
+app.post('/host/add', (req,res)=>{
+    const who = req.body;
+    console.log(who);
+    const text = "INSERT INTO property(host_id,address,city,property_type,room_type,max_occupany,num_rooms,num_bathrooms,property_name,price) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+    const values = [cookie.username,who.address,who.city,who.ptype,who.rtype,who.max_occupancy,who.rooms,who.bathrooms,who.pname,who.price];
+
+    db.query(text,values, (err,resz)=>{
+        if (err){
+            //res.send('Error executing query', err.stack);
+            return console.error('Error executing query', err.stack);
+        }
+
+        res.redirect('/host/reviews');
+    });
+
 });
 
 

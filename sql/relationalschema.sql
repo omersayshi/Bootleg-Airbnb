@@ -50,7 +50,7 @@ CREATE TABLE Guest(
 )
 
 CREATE TABLE Property(
-	property_id VARCHAR(10) not null,
+	property_id SERIAL not null,
 	host_id VARCHAR(10) not null,
 	address VARCHAR(20) not null,
 	city VARCHAR(20) not null,
@@ -68,9 +68,7 @@ CREATE TABLE Property(
 
 )
 
-INSERT INTO property(host_id,address,city,property_type,room_type,max_occupany,num_rooms,num_bathrooms,property_name,price)
-VALUES
-('saada','260 World Ave','Ottawa','semi detached house','private rooms',4,2,2,'Semi-Detached beautiful crib', 150)
+INSERT INTO property(host_id,address,city,property_type,room_type,max_occupany,num_rooms,num_bathrooms,property_name,price) VALUES ('saada','260 World Ave','Ottawa','semi detached house','private rooms',4,2,2,'Semi-Detached beautiful crib', 150) 
 
 CREATE TABLE Payment(
 	payment_id SERIAL not null,
