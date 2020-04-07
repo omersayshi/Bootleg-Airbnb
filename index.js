@@ -8,8 +8,6 @@ const Cookie = require('./bootlegcookie');
 //app.use(cors());
 
 const cookie = new Cookie();
-// cookie.set('omer','host');
-// cookie.setfirstname('Omer');
 
 
 
@@ -41,8 +39,8 @@ app.post('/signup', (req,res)=>{
             }
         })
     }else if(who == 'Employee'){
-        const query = "INSERT INTO Employee(employee_id,password,first_name,last_name,email,branch_id,phone_no) VALUES ($1,$2,$3,$4,$5,$6,$7)";
-        const text = [user.username, user.password, user.first_name, user.last_name, user.email, user.branch_id, parseInt(user.phone_no)];
+        const query = "INSERT INTO Employee(employee_id,password,first_name,last_name,email,branch_id,phone_no,salary) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)";
+        const text = [user.username, user.password, user.first_name, user.last_name, user.email, user.branch_id, parseInt(user.phone_no),150000];
         db.query(query,text, (err,result)=>{
             if (err){
                 return console.error('Error executing query', err.stack);
@@ -100,19 +98,20 @@ app.post('/signin', (req,ress)=>{
             }
         })
     }else if(who == 'Employee'){
-        // const query ='SELECT * FROM employee where guest_id = $1 AND password = $2';
-        // const text = [user.username,user.password];
-        // db.query(query, text, (err,res)=>{
-        //     if (err){
-        //         return console.error('Error executing query', err.stack);
-        //     }
+        const query ='SELECT * FROM employee where employee_id = $1 AND password = $2';
+        const text = [user.username,user.password];
+        db.query(query, text, (err,res)=>{
+            if (err){
+                return console.error('Error executing query', err.stack);
+            }
     
-        //     if (res.rowCount == 0){
-        //         ress.status(404).send('Username not found or password is wrong. Signup or check password pls.')
-        //     }else{
-        //         cookie.set(user.username,'employee');
-        //     }
-        // })
+            if (res.rowCount == 0){
+                ress.status(404).send('Username not found or password is wrong. Signup or check password pls.')
+            }else{
+                cookie.set(user.username,'employee');
+                ress.redirect('/employee');
+            }
+        })
     }else{
         console.log("Who are you? You are not employee, guest or host loool")
     }
@@ -175,35 +174,35 @@ app.get('/user/mybookings/:id', (req,res)=>{
     })
 });
 
-app.get('/user/cancelbook/:id', (req,res)=>{
-    db.query('SELECT booking_id, start_date FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,result)=>{
-        if (err){
-            return console.error('Error executing query', err.stack);
-        }
-        today = new Date();
-        date = result.rows[0].start_date;
-        console.log(today);
-        console.log(date);
-        console.log(date<today);
-        if(date<today){
-            res.send('You can not cancel a booking that has already passed its start date!')
-        }else{
-            db.query('DELETE FROM review WHERE boooking_id = $1', [req.params.id], (err,ree)=>{
-                if (err){
-                    return console.error('Error executing query', err.stack);
-                }
-            });
+// app.get('/user/cancelbook/:id', (req,res)=>{
+//     db.query('SELECT booking_id, start_date FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,result)=>{
+//         if (err){
+//             return console.error('Error executing query', err.stack);
+//         }
+//         today = new Date();
+//         date = result.rows[0].start_date;
+//         console.log(today);
+//         console.log(date);
+//         console.log(date<today);
+//         if(date<today){
+//             res.send('You can not cancel a booking that has already passed its start date!')
+//         }else{
+//             db.query('DELETE FROM review WHERE boooking_id = $1', [req.params.id], (err,ree)=>{
+//                 if (err){
+//                     return console.error('Error executing query', err.stack);
+//                 }
+//             });
 
-            db.query('DELETE FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,ree)=>{
-                if (err){
-                    return console.error('Error executing query', err.stack);
-                }
-            });
+//             db.query('DELETE FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,ree)=>{
+//                 if (err){
+//                     return console.error('Error executing query', err.stack);
+//                 }
+//             });
             
-            res.redirect(`/user`);
-        }
-    });
-});
+//             res.redirect(`/user`);
+//         }
+//     });
+// });
 
 //my bookings page huuuuuuuuuuuh
 
@@ -360,16 +359,11 @@ app.get('/host/cancelbooking/:id', (req,res)=>{
         }else{
             db.query('DELETE FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,ree)=>{
                 if (err){
-                    return console.error('Error executing query', err.stack);
-                }
-            });
-            db.query('DELETE FROM review WHERE boooking_id = $1', [req.params.id], (err,ree)=>{
-                if (err){
-                    return console.error('Error executing query', err.stack);
+                    res.send("You cant delete a rentalgreement that a review has been left for!")
                 }
             });
 
-            res.redirect(`/host/mybookings/${req.params.id}`);
+            res.redirect(`/host/mybookings`);
         }
     });
 });
@@ -378,7 +372,6 @@ app.get('/host/cancelbooking/:id', (req,res)=>{
 app.get('/host/addprop',(req,res)=>{
     res.render('pages/host/hostaddprop');
 });
-
 
 
 app.post('/host/add', (req,res)=>{
@@ -398,10 +391,96 @@ app.post('/host/add', (req,res)=>{
 
 });
 
+app.get('/employee', (req,res)=>{
+    res.render('pages/employee/employee', {userfirstname: cookie.firstname});
+});
+
+app.get('/employee/guests',(req,res)=>{
+
+    db.query("SELECT * FROM guest",(err,resz)=>{
+        if (err){
+            //res.send('Error executing query', err.stack);
+            return console.error('Error executing query', err.stack);
+        }
+
+        res.render('pages/employee/empusersintro', {users : resz.rows});
+    });
+});
+
+
+app.get('/employee/hosts',(req,res)=>{
+
+    db.query("SELECT * FROM host",(err,resz)=>{
+        if (err){
+            //res.send('Error executing query', err.stack);
+            return console.error('Error executing query', err.stack);
+        }
+
+        res.render('pages/employee/emphosts', {users : resz.rows});
+    });
+});
+
+
+app.get('/employee/hosts/:id',(req,rez)=>{
+    db.query('SELECT property_id,property_name FROM property WHERE host_id = $1',[req.params.id], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+
+        db.query('SELECT * FROM host WHERE host_id = $1',[req.params.id], (err,rz)=>{
+            if (err){
+                return console.error('Error executing query', err.stack);
+            }
+            console.log(result.rows);
+            rez.render('pages/employee/emphostdetails', {info: rz.rows[0], prop: result.rows});
+        });
+    });
+});
+
+app.get('/employee/properties/:id', (req,res)=>{
+    db.query('SELECT * FROM property WHERE property_id = $1',[req.params.id], (err,result)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+
+        db.query('SELECT * FROM rentalagreement INNER JOIN review ON rentalagreement.booking_id = review.boooking_id WHERE property_id = $1 AND start_date < $2',[req.params.id,new Date()], (err,past)=>{
+            if (err){
+                return console.error('Error executing query', err.stack);
+            }
+            
+            db.query('SELECT * FROM rentalagreement WHERE property_id = $1 AND start_date > $2',[req.params.id,new Date()], (err,future)=>{
+                if (err){
+                    return console.error('Error executing query', err.stack);
+                }
+                //console.log(rz.rows);
+                res.render('pages/employee/empprop', {info: result.rows[0], past: past.rows, woo1: past.rowCount, woo2: future.rowCount, future: future.rows});
+            });
+        });
+    });
+});
+
+
+app.get('/employee/cancelbooking/:id', (req,res)=>{  
+    db.query('DELETE FROM rentalagreement WHERE booking_id = $1', [req.params.id], (err,ree)=>{
+        if (err){
+            return console.error('Error executing query', err.stack);
+        }
+    });
+    res.redirect(`/employee/hosts`);
+});
+
+
+
+
+
+
+
+
+
 
 
 const PORT = process.env.port || 3000;
 
 app.listen(PORT, ()=>{
     console.log(`listening at localhost:${PORT}`);
-});
+})
