@@ -39,8 +39,9 @@ app.post('/signup', (req,res)=>{
             }
         })
     }else if(who == 'Employee'){
-        const query = "INSERT INTO Employee(employee_id,password,first_name,last_name,email,branch_id,phone_no,salary) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)";
-        const text = [user.username, user.password, user.first_name, user.last_name, user.email, user.branch_id, parseInt(user.phone_no),150000];
+        const salary = Math.floor((Math.random() * 125000) + 70000); 
+        const query = "INSERT INTO Employee(employee_id,password,first_name,last_name,email,branch_id,phone_no,salary,manager_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)";
+        const text = [user.username, user.password, user.first_name, user.last_name, user.email, user.branch_id, parseInt(user.phone_no),salary,user.manager_id];
         db.query(query,text, (err,result)=>{
             if (err){
                 return console.error('Error executing query', err.stack);
@@ -74,7 +75,7 @@ app.post('/signin', (req,ress)=>{
             }else{
                 
                 //sets cookie to play with
-                cookie.set(user.username,'host');
+                cookie.set(user.username,'guest');
                 cookie.setfirstname(res.rows[0].first_name);
                 //takes us to the users page
                 ress.redirect('/user');
@@ -109,6 +110,8 @@ app.post('/signin', (req,ress)=>{
                 ress.status(404).send('Username not found or password is wrong. Signup or check password pls.')
             }else{
                 cookie.set(user.username,'employee');
+                cookie.setfirstname(res.rows[0].first_name);
+                cookie.setbranch(res.rows[0].branch_id);
                 ress.redirect('/employee');
             }
         })
@@ -410,7 +413,7 @@ app.get('/employee/guests',(req,res)=>{
 
 app.get('/employee/hosts',(req,res)=>{
 
-    db.query("SELECT * FROM host",(err,resz)=>{
+    db.query("SELECT * FROM host where branch_id = $1",[cookie.branch],(err,resz)=>{
         if (err){
             //res.send('Error executing query', err.stack);
             return console.error('Error executing query', err.stack);

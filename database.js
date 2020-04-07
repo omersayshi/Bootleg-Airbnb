@@ -1,10 +1,11 @@
+//Edit this for the database connection
 const {Pool} = require('pg');
 const db = new Pool({
-    user: 'oabub037',
-    host: 'web0.eecs.uottawa.ca',
-    database: 'oabub037',
-    password: 'Ibra1234@@',
-    port: 15432,
+    user: 'dbuser',
+    host: 'database.server.com',
+    database: 'mydb',
+    password: 'secretpassword',
+    port: 3211,
 });
 
 

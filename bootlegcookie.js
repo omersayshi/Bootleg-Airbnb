@@ -19,6 +19,10 @@ class bootlegcookie{
         this.type = '';
         this.firstname = '';
     }
+
+    setbranch(f){
+        this.branch = f;
+    }
 }
 
 module.exports = bootlegcookie;
